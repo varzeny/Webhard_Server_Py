@@ -1,0 +1,28 @@
+
+
+<div class="container-header">
+    <div class="header-top"></div>
+    <ul class="header-nav">
+        <li>
+            <a href="https://varzeny.com">V</a>
+        </li>
+
+        <li>
+            <a href="/">Home</a>
+        </li>
+
+        {% if role == "guest" %}
+        <li>
+            <a href="https://test.varzeny.com/login/page">Login</a>
+        </li>
+
+        {% else %}
+        <li>
+            <a href="">My</a>
+        </li>
+        <li>
+            <a href="https://test.varzeny.com/logout">LogOut</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
