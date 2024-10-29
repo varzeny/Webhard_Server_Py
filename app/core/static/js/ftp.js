@@ -31,6 +31,7 @@ const PAGE = {
         // test
         this.btnTest = document.getElementById("btn-test");
         this.btnTest.addEventListener("click", function(){
+          console.log("테스트 버튼 눌림");
             fetch("/ftp/test", {
                 method: 'POST',
                 headers: {
