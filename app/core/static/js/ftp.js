@@ -23,10 +23,6 @@ const PAGE = {
               }
             }).catch(error => console.error("에러 발생:", error));
         });
-        
-
-        checkStatus();
-
 
         // test
         this.btnTest = document.getElementById("btn-test");
@@ -47,6 +43,9 @@ const PAGE = {
             }).catch(error => console.error("에러 발생:", error));
         });
 
+        checkStatus();
+
+
     }
 }
 
@@ -63,12 +62,17 @@ async function init() {
 }
 
 async function checkStatus() {
+  try{
     const resp = await fetch("/ftp/status");
     if(!resp.ok){ throw Error("FTP서버 상태 확인이 안됨"); }
-    const respData = await resp.json();
-    // console.log(respData);
-    PAGE.onoff.checked = respData.onoff;
 
+    const respData = await resp.json();
+    console.log("FTP서버로부터 상태 응답 받음 :", respData);
+
+    PAGE.onoff.checked = respData.onoff;
+  }catch(error){
+    console.log("ERROR from checkStatus : ", error);
+  }
 }
 
 
