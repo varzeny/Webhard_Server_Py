@@ -1,0 +1,24 @@
+/* ftp.css */
+
+main {
+
+}
+    section {
+
+    }
+        .sector {
+            border: 1px solid gray;
+            padding: 1rem;
+        }
+            .category {
+
+            }
+                .category label {
+                    margin-right: 1rem;
+                }
+
+
+            #dashboard {
+                display: flex;
+                flex-direction: column;
+            }

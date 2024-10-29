@@ -1,0 +1,84 @@
+/* files.css */
+
+
+main {
+    display: flex;
+    flex-direction: column;
+
+}
+    .sector {
+        width: 100%;
+        padding: 1rem;
+    }
+        #top {
+
+        }
+        #mid {
+            display: flex;
+            flex-direction: row;
+        }
+        #bot {
+
+        }
+            .sector section {
+                width: 100%;
+                border: 1px solid gray;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+                .path {
+
+                }
+                .tree {
+                    flex: 5;
+                }
+                    .tree div {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                        .a-dir {
+                            color: lightgoldenrodyellow;
+                        }
+                        .a-file {
+                            color: gray;
+                        }
+                .up {
+                    flex: 5;
+                }
+                    #drag {
+                        margin-top: 1rem;
+                        width: 100%;
+                        min-height: 200px;
+                        border: 4px dotted gray;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    #drag.drag-over {
+                        border-color: #333;
+                        background-color: #f0f0f0;
+                    }
+                    #btns{
+                        margin-top: 1rem;
+                        display: flex;
+                    }
+                        #btn-choice {
+                            font-size: 1.5rem;
+                                
+                        }
+                        #btn-upload {
+                            margin-left: 1rem;
+                            font-size: 1.5rem;
+
+                        }
+
+
+
+
+
+
+
+

@@ -8,20 +8,24 @@
         </li>
 
         <li>
-            <a href="/">Home</a>
+            <a href="/files/">Files</a>
         </li>
+
 
         {% if role == "guest" %}
         <li>
-            <a href="https://test.varzeny.com/login/page">Login</a>
+            <a href="https://auth.varzeny.com/login/page">Login</a>
         </li>
 
         {% else %}
         <li>
+            <a href="https://test2.varzeny.com/ftp/page">FTP</a>
+        </li>
+        <li>
             <a href="">My</a>
         </li>
         <li>
-            <a href="https://test.varzeny.com/logout">LogOut</a>
+            <a href="https://auth.varzeny.com/logout">LogOut</a>
         </li>
         {% endif %}
     </ul>

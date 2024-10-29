@@ -30,6 +30,9 @@ app.state.env = {
                 "secretkey":getenv("APP_SERVICE_ACCESS_SECRETKEY"),
                 "algorithm":getenv("APP_SERVICE_ACCESS_ALGORITHM"),
                 "expmin":getenv("APP_SERVICE_ACCESS_EXPMIN")
+            },
+            "ftp":{
+                "sudopw":getenv("APP_SERVICE_FTP_SUDOPW")
             }
         }
     }
@@ -51,7 +54,7 @@ if __name__=="__main__":
     import uvicorn
     uvicorn.run(
         app="main:app",
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=9010,
         workers=1,
         reload=True

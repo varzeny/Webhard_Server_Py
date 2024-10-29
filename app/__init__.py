@@ -6,6 +6,7 @@ from fastapi import FastAPI, staticfiles
 # module
 from .api.endpoint import router
 from .service.access import Manager as ACCS
+from .service.ftp import Manager as FTP
 
 # define
 class Manager:
@@ -31,3 +32,4 @@ class Manager:
 
         # service
         ACCS.setup(app)
+        FTP.setup(app)

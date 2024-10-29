@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Page FTP</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/thema.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/ftp.css">
+    <script src="/static/js/ftp.js"></script>
+</head>
+<body>
+    <header>
+        {% include "header.html" %}
+    </header>
+    
+    <main>
+        <section id="top">
+            <div class="sector" id="dashboard">
+                <div class="category">
+                    <label for="onoff">FTP 서버 상태</label>
+                    <input type="checkbox" id="onoff">
+                </div>
+                <button id="btn-test">test</button>
+
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        {% include "footer.html" %}
+    </footer>
+</body>
+</html>

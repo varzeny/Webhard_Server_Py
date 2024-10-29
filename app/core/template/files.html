@@ -2,10 +2,11 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>Page Title</title>
+    <title>Page Files</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
     <link rel="stylesheet" type="text/css" href="/static/css/thema.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/files.css">
     <script src="/static/js/files.js"></script>
 </head>
 <body>
@@ -14,16 +15,44 @@
     </header>
     
     <main>
-        <section class="tree" id="dir">
-            
-        </section>
-        <section class="tree" id="file">
+        <div class="sector" id="top">
+            <section class="path">
+                현재경로 : <span id="span-path"></span>
+            </section>
+        </div>
 
-        </section>
+        <div class="sector" id="mid">
+            <section class="tree">
+                Tree
+                <div id="dir">
+                
+                </div>
+    
+                <div id="file">
+        
+                </div>
+            </section>
+    
+            <section class="up">
+                Upload
+                <div id="drag">
+                    drag file
+                </div>
+                <div id="btns">
+                    <button id="btn-choice">Choice</button>
+                    <button id="btn-upload">Upload</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="sector" id="bot">
+
+        </div>
     </main>
 
     <footer>
         {% include "footer.html" %}
     </footer>
+    <script>window.role="{{role}}"</script>
 </body>
 </html>

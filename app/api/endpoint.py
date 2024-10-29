@@ -2,7 +2,7 @@
 
 # lib
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.routing import APIRouter
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
@@ -11,6 +11,7 @@ from fastapi.responses import Response, JSONResponse, FileResponse
 
 # module
 from ..service.access import Manager as ACCS
+from ..service.ftp import Manager as FTP
 
 
 # define
@@ -47,7 +48,7 @@ async def get_root(req:Request):
 
     resp = template.TemplateResponse(
         request=req,
-        name="aaa.html",
+        name="files.html",
         context={
             "role":t.get("role")
         },
@@ -55,7 +56,7 @@ async def get_root(req:Request):
     )
     return resp
 
-
+# files #############################################################
 @router.get("/files")
 async def get_files(req:Request):
     try:
@@ -70,11 +71,11 @@ async def get_files(req:Request):
             },
             status_code=200
         )
+        return resp
 
     except Exception as e:
         print("ERROR from get_files : ", e)
         return Response(status_code=400)
-    return resp
 
 
 @router.get("/files/search/{name:path}")
@@ -135,4 +136,63 @@ async def get_download_file(req:Request, name:str):
 
     except Exception as e:
         print("ERROR from get_download_file : ", e)
+        return Response(status_code=400)
+    
+
+# FTP #############################################################
+@router.get("/ftp/page")
+async def get_ftp_page(req:Request, t=Depends(admin_only)):
+    try:
+        print(t)
+
+        resp = template.TemplateResponse(
+            request=req,
+            name="ftp.html",
+            context={
+                "role":t.get("role")
+            },
+            status_code=200
+        )
+        return resp
+    
+    except Exception as e:
+        print("ERROR from get_ftp_page : ", e)
+        return Response(status_code=400)
+
+
+@router.get("/ftp/status")
+async def get_status(req:Request):
+    try:
+        print("FTP 서버 상태 확인 요청 받음")
+        onoff = FTP.status()
+
+        return JSONResponse(status_code=200, content={"onoff":onoff})
+    except Exception as e:
+        print("ERROr from get_status : ", e)
+        return Response(status_code=400)
+
+
+@router.post("/ftp/onoff")
+async def post_onoff(req:Request):
+    try:
+        print("서버 상태 변경 요청 받음 !")
+        reqData = await req.form()
+        print("----------------onoff : ",reqData)
+
+        print()
+
+        return Response(status_code=200)
+    except Exception as e:
+        print("ERROR from post_onoff : ", e)
+        return Response(status_code=400)
+    
+
+@router.post("/ftp/test")
+async def post_test(req:Request):
+    try:
+        reqData = await req.json()
+        print(reqData)
+        return Response(status_code=200)
+    except Exception as e:
+        print("ERROR from post_test :", e)
         return Response(status_code=400)
