@@ -19,7 +19,7 @@ class Manager:
     @classmethod
     def status(cls):
         result = subprocess.run(
-            ["ssh", f"{cls.env["id"]}@{cls.env["ip"]}", "sudo systemctl is-active vsftpd"],
+            ["ssh", f"{cls.env['id']}@{cls.env['ip']}", "sudo systemctl is-active vsftpd"],
             input=cls.env.get("pw")+'\n',
             capture_output=True,
             text=True
