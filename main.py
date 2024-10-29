@@ -32,7 +32,9 @@ app.state.env = {
                 "expmin":getenv("APP_SERVICE_ACCESS_EXPMIN")
             },
             "ftp":{
-                "sudopw":getenv("APP_SERVICE_FTP_SUDOPW")
+                "ip":getenv("APP_SERVICE_FTP_IP"),
+                "id":getenv("APP_SERVICE_FTP_ID"),
+                "pw":getenv("APP_SERVICE_FTP_PW")
             }
         }
     }
