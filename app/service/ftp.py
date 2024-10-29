@@ -19,7 +19,7 @@ class Manager:
     @classmethod
     def status(cls):
         result = subprocess.run(
-            args=["sudo", "-S", "systemctl", "is-active", "vsftpd"],
+            ["sudo", "-S", "systemctl", "is-active", "vsftpd"],
             input=cls.env.get("sudopw")+'\n',
             capture_output=True,
             text=True
