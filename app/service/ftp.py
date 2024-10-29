@@ -19,8 +19,7 @@ class Manager:
     @classmethod
     def status(cls):
         result = subprocess.run(
-            ["systemctl", "is-active", "vsftpd"],
-            input=cls.env.get("sudopw")+'\n',
+            ["pgrep", "-x", "vsftpd"],
             capture_output=True,
             text=True
         )
@@ -38,16 +37,14 @@ class Manager:
         
         if onoff:
             result = subprocess.run(
-                ["systemctl", "start", "vsftpd"],
-                input=cls.env.get("sudopw")+'\n',
+                ["service", "vsftpd", "start"],
                 capture_output=True,
                 text=True
             )
             print(result.stdout)
         else:
             result = subprocess.run(
-                ["systemctl", "stop", "vsftpd"],
-                input=cls.env.get("sudopw")+'\n',
+                ["service", "vsftpd", "stop"],
                 capture_output=True,
                 text=True
             )
