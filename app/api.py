@@ -65,7 +65,7 @@ async def get_root(req:Request):
         request=req,
         name="files.html",
         context={
-            "role_id":access_dt.get("role_id")
+            "role_id":access_dt.get("role_id") if access_dt is not None else None
         },
         status_code=200
     )
