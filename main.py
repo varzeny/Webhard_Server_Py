@@ -3,18 +3,21 @@
 # lib
 from dotenv import load_dotenv
 from os import getenv
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, staticfiles
 
 # module
-from app import Manager as APP
-from app.middleware.access import Manager as ACCS_MW
+from app.security import Manager as SECURITY
+from app import api as API
 
 # define
 load_dotenv()
 async def startup():
-    APP.setup( app )
-    return
+    # security
+    SECURITY.setup( app.state.env["app"]["security"] )
+
+    # api
+    app.include_router(API.router)
+
 
 async def shutdown():
     return
@@ -22,42 +25,29 @@ async def shutdown():
 
 app = FastAPI()
 app.state.env = {
-    "project":{},
+    "project":{
+        "name":getenv("PROJECT_NAME"),
+    },
     "app":{
-        "core":{},
-        "service":{
-            "access":{
-                "secretkey":getenv("APP_SERVICE_ACCESS_SECRETKEY"),
-                "algorithm":getenv("APP_SERVICE_ACCESS_ALGORITHM"),
-                "expmin":getenv("APP_SERVICE_ACCESS_EXPMIN")
+        "security":{
+            "auth":{
+                "url":getenv("APP_SECURITY_AUTH_URL"),
             },
-            "ftp":{
-                "ip":getenv("APP_SERVICE_FTP_IP"),
-                "id":getenv("APP_SERVICE_FTP_ID"),
-                "pw":getenv("APP_SERVICE_FTP_PW")
-            }
-        }
+            "access":{
+                "name":getenv("APP_SECURITY_ACCESS_NAME"),
+                "secretkey":getenv("APP_SECURITY_ACCESS_SECRETKEY"),
+                "algorithm":getenv("APP_SECURITY_ACCESS_ALGORITHM"),
+                "expmin":int(getenv("APP_SECURITY_ACCESS_EXPMIN")),
+            },
+        },
     }
 }
 app.add_event_handler("startup", startup)
 app.add_event_handler("shutdown", shutdown)
-# app.add_middleware(
-#     middleware_class=CORSMiddleware,
-#     allow_origins=["https://test.varzeny.com", "https://test2.varzeny.com"],  # 각 서비스 및 인증 서버 도메인 모두 추가
-#     allow_credentials=True,  # 쿠키 전송 허용
-#     allow_methods=["*"],  # 모든 메서드 허용
-#     allow_headers=["*"],  # 모든 헤더 허용
-# )
-app.add_middleware( ACCS_MW )
 
-
-# script
-if __name__=="__main__":
-    import uvicorn
-    uvicorn.run(
-        app="main:app",
-        host="0.0.0.0",
-        port=9010,
-        workers=1,
-        reload=True
-    )
+# mount
+app.mount(
+    path="/static",
+    app=staticfiles.StaticFiles(directory="app/core/static"),
+    name="static"
+)

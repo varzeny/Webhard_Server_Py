@@ -1,4 +1,4 @@
-# api/endpoint.py
+# api.py
 
 # lib
 import os
@@ -10,8 +10,7 @@ from fastapi.responses import Response, JSONResponse, FileResponse
 
 
 # module
-from ..service.access import Manager as ACCS
-from ..service.ftp import Manager as FTP
+from app.security import Manager as SECURITY
 
 
 # define
@@ -21,36 +20,52 @@ template = Jinja2Templates(directory="app/core/template")
 
 # dependency
 async def guest_only(req:Request):
-    if req.state.access_token.get("role") == "guest":
-        return req.state.access_token
-    else:
+    access_et = req.cookies.get(SECURITY.access_name)
+    access_dt = SECURITY.verify_access_token(access_et)
+    if access_et and access_dt:
+        print("게스트 아님")
         raise HTTPException(status_code=401, detail="you are not guest")
+    else:
+        print("게스트 맞음")
+        return access_dt
 
 async def user_only(req:Request):
-    if req.state.access_token.get("role") != "guest":
-        return req.state.access_token
+    access_et = req.cookies.get(SECURITY.access_name)
+    access_dt = SECURITY.verify_access_token(access_et)
+    if access_et and access_dt:
+        print("유저임")
+        return access_dt
     else:
-        raise HTTPException(status_code=401, detail="you are not user")
+        print("access_token 없음")
+        raise HTTPException(status_code=401, detail="access_token doesn't exist")
     
 async def admin_only(req:Request):
-    if req.state.access_token.get("role") == "admin":
-        return req.state.access_token
+    access_et = req.cookies.get(SECURITY.access_name)
+    access_dt = SECURITY.verify_access_token(access_et)
+    if access_et and access_dt:
+        print(access_dt)
+        if access_dt.get("role_id")==1:
+            print("관리자임")
+            return access_dt
+        else:
+            print("엑세스 토큰은 있는데, 관리자가 아님")
+            raise HTTPException(status_code=403, detail="you are not admin")
     else:
-        raise HTTPException(status_code=401, detail="you are not admin")
+        print("access_token 없음")
+        raise HTTPException(status_code=401, detail="access_token doesn't exist")
 
 
 # endpoint
 @router.get("/")
 async def get_root(req:Request):
-
-    t = req.state.access_token
-    print(t)
+    access_et = req.cookies.get(SECURITY.access_name)
+    access_dt = SECURITY.verify_access_token(access_et)
 
     resp = template.TemplateResponse(
         request=req,
         name="files.html",
         context={
-            "role":t.get("role")
+            "role_id":access_dt.get("role_id")
         },
         status_code=200
     )
@@ -60,14 +75,14 @@ async def get_root(req:Request):
 @router.get("/files")
 async def get_files(req:Request):
     try:
-        t = req.state.access_token
-        print(t)
+        access_et = req.cookies.get(SECURITY.access_name)
+        access_dt = SECURITY.verify_access_token(access_et)
 
         resp = template.TemplateResponse(
             request=req,
             name="files.html",
             context={
-                "role":t.get("role")
+                "role_id":access_dt.get("role_id")
             },
             status_code=200
         )
@@ -140,59 +155,59 @@ async def get_download_file(req:Request, name:str):
     
 
 # FTP #############################################################
-@router.get("/ftp/page")
-async def get_ftp_page(req:Request, t=Depends(admin_only)):
-    try:
-        print(t)
+# @router.get("/ftp/page")
+# async def get_ftp_page(req:Request, t=Depends(admin_only)):
+#     try:
+#         print(t)
 
-        resp = template.TemplateResponse(
-            request=req,
-            name="ftp.html",
-            context={
-                "role":t.get("role")
-            },
-            status_code=200
-        )
-        return resp
+#         resp = template.TemplateResponse(
+#             request=req,
+#             name="ftp.html",
+#             context={
+#                 "role":t.get("role")
+#             },
+#             status_code=200
+#         )
+#         return resp
     
-    except Exception as e:
-        print("ERROR from get_ftp_page : ", e)
-        return Response(status_code=400)
+#     except Exception as e:
+#         print("ERROR from get_ftp_page : ", e)
+#         return Response(status_code=400)
 
 
-@router.get("/ftp/status")
-async def get_status(req:Request):
-    try:
-        print("FTP 서버 상태 확인 요청 받음")
-        onoff = FTP.status()
+# @router.get("/ftp/status")
+# async def get_status(req:Request):
+#     try:
+#         print("FTP 서버 상태 확인 요청 받음")
+#         onoff = FTP.status()
 
-        return JSONResponse(status_code=200, content={"onoff":onoff})
-    except Exception as e:
-        print("ERROr from get_status : ", e)
-        return Response(status_code=400)
+#         return JSONResponse(status_code=200, content={"onoff":onoff})
+#     except Exception as e:
+#         print("ERROr from get_status : ", e)
+#         return Response(status_code=400)
 
 
-@router.post("/ftp/onoff")
-async def post_onoff(req:Request):
-    try:
-        print("서버 상태 변경 요청 받음 !")
-        reqData = await req.form()
-        print("----------------onoff : ",reqData)
+# @router.post("/ftp/onoff")
+# async def post_onoff(req:Request):
+#     try:
+#         print("서버 상태 변경 요청 받음 !")
+#         reqData = await req.form()
+#         print("----------------onoff : ",reqData)
 
-        print()
+#         print()
 
-        return Response(status_code=200)
-    except Exception as e:
-        print("ERROR from post_onoff : ", e)
-        return Response(status_code=400)
+#         return Response(status_code=200)
+#     except Exception as e:
+#         print("ERROR from post_onoff : ", e)
+#         return Response(status_code=400)
     
 
-@router.post("/ftp/test")
-async def post_test(req:Request):
-    try:
-        reqData = await req.json()
-        print(reqData)
-        return Response(status_code=200)
-    except Exception as e:
-        print("ERROR from post_test :", e)
-        return Response(status_code=400)
+# @router.post("/ftp/test")
+# async def post_test(req:Request):
+#     try:
+#         reqData = await req.json()
+#         print(reqData)
+#         return Response(status_code=200)
+#     except Exception as e:
+#         print("ERROR from post_test :", e)
+#         return Response(status_code=400)
