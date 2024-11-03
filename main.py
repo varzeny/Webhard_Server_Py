@@ -48,6 +48,7 @@ app.add_event_handler("shutdown", shutdown)
 # mount
 app.mount(
     path="/static",
-    app=staticfiles.StaticFiles(directory="app/core/static"),
+    app=staticfiles.StaticFiles(directory="app/static"),
     name="static"
 )
+

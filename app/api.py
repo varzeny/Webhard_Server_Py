@@ -15,7 +15,7 @@ from app.security import Manager as SECURITY
 
 # define
 router = APIRouter()
-template = Jinja2Templates(directory="app/core/template")
+template = Jinja2Templates(directory="app/template")
 
 
 # dependency
